@@ -84,8 +84,16 @@ pie_chart = px.pie(df_participants,
 
 st.plotly_chart(pie_chart)
 
-image= Image.open('Image/example image.jpg')
-st.image(image,
-        caption = 'test image',
-        use_column_width = True)
+# image= Image.open('Image/example image.jpg')
+# st.image(image,
+#         caption = 'test image',
+#         use_column_width = True)
 
+
+st.download_button(
+   "Press to Download",
+   df,
+   "file.xlsx",
+    "text/excel",
+   key='download-csv'
+)
