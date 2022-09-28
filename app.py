@@ -1,5 +1,7 @@
 import pandas as pd
 import streamlit as st
+from io import BytesIO
+from pyxlsb import open_workbook as open_xlsb
 import plotly.express as px
 from PIL import Image
 
@@ -12,30 +14,33 @@ st.subheader('Was the tutorial helpful?')
 excel_file = 'Survey_Results.xlsx'
 sheet_name = 'DATA'
 
-uploaded_file = st.file_uploader('Choose a file')
-if uploaded_file is not None:
-    #read csv
-    df = pd.read_excel(uploaded_file, 
+df = pd.read_excel(excel_file, 
                    sheet_name=sheet_name,
                    usecols= 'B:D',
                    header=3)
-    df_participants = pd.read_excel(uploaded_file,
+
+df_participants = pd.read_excel(excel_file,
                                 sheet_name=sheet_name,
                                 usecols='F:G',
                                 header=3)
-else:
-    st.warning('you need to upload a csv or excel file.')
 
 
-# df = pd.read_excel(excel_file, 
+### -- Upload a file within app.
+# uploaded_file = st.file_uploader('Choose a file')
+# if uploaded_file is not None:
+#     #read excel
+#     df = pd.read_excel(uploaded_file, 
 #                    sheet_name=sheet_name,
 #                    usecols= 'B:D',
 #                    header=3)
 
-# df_participants = pd.read_excel(excel_file,
+#     df_participants = pd.read_excel(uploaded_file,
 #                                 sheet_name=sheet_name,
 #                                 usecols='F:G',
 #                                 header=3)
+# else:
+#     st.warning('you need to upload a csv or excel file.')
+
 
 df_participants.dropna(inplace=True)
 
@@ -90,10 +95,31 @@ st.plotly_chart(pie_chart)
 #         use_column_width = True)
 
 
-st.download_button(
-   "Press to Download",
-   df,
-   "file.xlsx",
-    "text/excel",
-   key='download-csv'
-)
+### --- Download Button ---
+# df.to_excel('file.xlsx')
+
+# st.download_button(
+#    label = 'Press to Download',
+#    data = df_xlsx,
+#    file_name = "file.xlsx",
+#     mime = "text/excel",
+#    key='download-csv'
+# )
+
+def to_excel(df):
+    output = BytesIO()
+    writer = pd.ExcelWriter(output, engine='xlsxwriter')
+    df.to_excel(writer, index=False, sheet_name='Sheet1')
+    workbook = writer.book
+    worksheet = writer.sheets['Sheet1']
+    # format1 = workbook.add_format({'num_format': '0.00'}) 
+    # worksheet.set_column('A:A', None, format1)  
+    writer.save()
+    processed_data = output.getvalue()
+    return processed_data
+
+df_xlsx = to_excel(df_participants)
+
+st.download_button(label='📥 Download Current Result',
+                                data=df_xlsx,
+                                file_name= 'df_test.xlsx')
