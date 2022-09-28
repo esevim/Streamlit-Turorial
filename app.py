@@ -14,32 +14,32 @@ st.subheader('Was the tutorial helpful?')
 excel_file = 'Survey_Results.xlsx'
 sheet_name = 'DATA'
 
-df = pd.read_excel(excel_file, 
-                   sheet_name=sheet_name,
-                   usecols= 'B:D',
-                   header=3)
-
-df_participants = pd.read_excel(excel_file,
-                                sheet_name=sheet_name,
-                                usecols='F:G',
-                                header=3)
-
-
-### -- Upload a file within app.
-# uploaded_file = st.file_uploader('Choose a file')
-# if uploaded_file is not None:
-#     #read excel
-#     df = pd.read_excel(uploaded_file, 
+# df = pd.read_excel(excel_file, 
 #                    sheet_name=sheet_name,
 #                    usecols= 'B:D',
 #                    header=3)
 
-#     df_participants = pd.read_excel(uploaded_file,
+# df_participants = pd.read_excel(excel_file,
 #                                 sheet_name=sheet_name,
 #                                 usecols='F:G',
 #                                 header=3)
-# else:
-#     st.warning('you need to upload a csv or excel file.')
+
+
+### -- Upload a file within app.
+uploaded_file = st.file_uploader('Choose a file')
+if uploaded_file is not None:
+    #read excel
+    df = pd.read_excel(uploaded_file, 
+                   sheet_name=sheet_name,
+                   usecols= 'B:D',
+                   header=3)
+
+    df_participants = pd.read_excel(uploaded_file,
+                                sheet_name=sheet_name,
+                                usecols='F:G',
+                                header=3)
+else:
+    st.warning('you need to upload a csv or excel file.')
 
 
 df_participants.dropna(inplace=True)
