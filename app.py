@@ -9,21 +9,19 @@ st.set_page_config(page_title='Survey Results')
 st.header('Survey results 2021')
 st.subheader('Was the tutorial helpful?')
 
-
 ### --- Load DataFrame
 excel_file = 'Survey_Results.xlsx'
 sheet_name = 'DATA'
 
-# df = pd.read_excel(excel_file, 
-#                    sheet_name=sheet_name,
-#                    usecols= 'B:D',
-#                    header=3)
+df = pd.read_excel(excel_file, 
+                   sheet_name=sheet_name,
+                   usecols= 'B:D',
+                   header=3)
 
-# df_participants = pd.read_excel(excel_file,
-#                                 sheet_name=sheet_name,
-#                                 usecols='F:G',
-#                                 header=3)
-
+df_participants = pd.read_excel(excel_file,
+                                sheet_name=sheet_name,
+                                usecols='F:G',
+                                header=3)
 
 ### -- Upload a file within app.
 uploaded_file = st.file_uploader('Choose a file')
@@ -38,11 +36,11 @@ if uploaded_file is not None:
                                 sheet_name=sheet_name,
                                 usecols='F:G',
                                 header=3)
+
 else:
     st.warning('you need to upload a csv or excel file.')
 
-
-df_participants.dropna(inplace=True)
+df_participants.dropna(inplace=True)   
 
 # --- Streamlit Selection
 department = df['Department'].unique().tolist()
